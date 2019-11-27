@@ -6,10 +6,20 @@ a {
   
   h1 {font-family: $mainTextL;}
 }
-p,h2,h3,h1 {
+p,h2,h3 {
   font-family: $mainTextL;
 }
+h1 {
+  font-family: $mainTextR;
+}
+button {
+  background-color: transparent;
+  border: none;
 
+  &:hover {
+    cursor: pointer;
+  }
+}
 //presets
 textarea, input, button { outline: none; }
 //input {-webkit-appearance: none;}

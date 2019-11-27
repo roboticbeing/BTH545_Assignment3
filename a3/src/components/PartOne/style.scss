@@ -1,5 +1,29 @@
 @import "./../../assets/stylesheets/main"; 
-h1 {
-    font-family: $mainTextL;
-   
+
+
+.menu-section {
+
+    padding: 20px $Dmw;
+    display: flex;
+    justify-content: space-between;
+
+    .menu-container {
+        display: flex;
+    }
+    h2 {
+        font-size: 24px;
+        padding-top: 3px;
+    }
+    .menu-btn {
+        border-radius: 8px;
+        margin-left: 20px;
+
+        border: 1px solid #000;
+        padding: 6px 20px;
+
+        p {
+            font-family: $mainTextL;
+        }
+        
+    }
 }
