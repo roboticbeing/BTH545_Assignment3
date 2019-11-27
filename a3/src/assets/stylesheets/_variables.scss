@@ -1,0 +1,12 @@
+$mainTextL: 'Poppins-Light';
+$mainTextR: 'Poppins-Regular'; 
+
+
+//Desktop sizes
+$marginD: 80;
+
+//Sizes
+$desktop: 1920;
+
+
+$Dmw: ($marginD/$desktop) * 100vw;

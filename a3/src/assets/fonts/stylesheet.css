@@ -1,0 +1,11 @@
+@font-face {
+    font-family: 'Aileron';
+    src: url('Aileron-Bold.eot');
+    src: url('Aileron-Bold.eot?#iefix') format('embedded-opentype'),
+        url('Aileron-Bold.woff2') format('woff2'),
+        url('Aileron-Bold.woff') format('woff'),
+        url('Aileron-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
