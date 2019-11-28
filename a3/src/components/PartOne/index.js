@@ -22,6 +22,7 @@ class PartOne extends Component {
         this.displayPatterns = this.displayPatterns.bind(this);
         this.addPatterns = this.addPatterns.bind(this);
         this.updatePattern = this.updatePattern.bind(this);
+        this.inputDisplay = this.inputDisplay.bind(this);
     }
   
 
@@ -29,6 +30,11 @@ updatePattern = (e) => {
     console.log("Update Pattern" + e);
     console.log(e)
 
+
+}
+
+//Update individual pattern values
+updatePatternValue = (e) => {
 
 }
 
@@ -109,9 +115,8 @@ displayPatterns = () => {
             options={options}
             name={obj.id}
         />
-            
-            <input> 
-            </input>
+        
+          
 
         </div>
        )
@@ -120,7 +125,30 @@ displayPatterns = () => {
 
 
     return patterns;
-   }
+}
+
+inputDisplay = (id) => {
+    let tempPatterns = this.state.patterns; 
+
+    let inputReturn;
+
+    for(let i = 0; i < tempPatterns.length; i++) {
+        if(tempPatterns[i].id === id ) {
+            
+
+            if(tempPatterns[i]) {
+
+            }
+
+
+
+        }
+    }
+
+
+
+
+}
 
     componentDidMount() {
        
