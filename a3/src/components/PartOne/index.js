@@ -75,6 +75,24 @@ applyPattern = (e, id) => {
 
     //Value Of input
     console.log(e.target.value)
+    let tempPatterns = this.state.patterns;
+
+    for (let i = 0; i < tempPatterns.length; i++) {
+      if (tempPatterns[i].id === id) {
+        if (
+          tempPatterns[i].type === "userDefined" ||
+          tempPatterns[i].type === "whiteSpace"
+        ) {
+          tempPatterns[i].valueOne = e.target.value;
+        } else {
+          if (e.target.name === "valueOne") {
+            tempPatterns[i].valueOne = e.target.value;
+          } else {
+            tempPatterns[i].valueTwo = e.target.value;
+          }
+        }
+      } 
+    }
 }    
 
 //Updates the type of pattern for each box
