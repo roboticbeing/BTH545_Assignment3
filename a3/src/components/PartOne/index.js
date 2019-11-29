@@ -39,12 +39,54 @@ class PartOne extends Component {
 displayRegex = () => {
     let regex = [];
 
-    regex.push(<div className="pattern-item">
+    console.log("Showing Patterns");
+    for (let i = 0; i < this.state.patterns.length; ++i){
+        console.log("Pattern " + i + ": " + this.state.patterns[i].type);
+        
+        if (this.state.patterns[i].type === "userDefined"){
+            regex.push(
+                <div className="pattern-item">
+                    <p>{this.state.patterns[i].valueOne}</p>
+                </div>
+            );
+        }
+        else if (this.state.patterns[i].type === "whiteSpace"){
+            regex.push(
+                <div className="pattern-item">
+                    <span className="box"></span>
+                </div>
+            );
+        }
+        else if (this.state.patterns[i].type === "numberRange"){
+            regex.push(
+                <div className="pattern-item">
+                    <p>[{this.state.patterns[i].valueOne} - {this.state.patterns[i].valueTwo}]</p>
+                </div>
+            );
+        }
+        else if (this.state.patterns[i].type === "selectCharacters"){
+            regex.push(
+                <div className="pattern-item">
+                    <p>[{this.state.patterns[i].valueOne}]</p>
+                </div>
+            );
+
+            for (let j = 1; j < this.state.patterns[i].valueTwo; ++j){
+                regex.push(
+                    <div className="pattern-item">
+                        <p>[{this.state.patterns[i].valueOne}]</p>
+                    </div>
+                );
+            }
+        }
+    }
+
+    /*regex.push(<div className="pattern-item">
         <p>Iphone</p>
-    </div>)
+    </div>);
     regex.push(<div className="pattern-item">
         <span className="box"></span>
-    </div>)
+    </div>);*/
 
     return regex;
 
