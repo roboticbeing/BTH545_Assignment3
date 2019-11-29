@@ -427,20 +427,31 @@ displayRegex = () => {
           );
         }
 
-        //If White Space
-        if (tempPatterns[i].type === "whiteSpace") {
-          inputReturn = (
-            <div className="pattern-container">
-              <h3>White Space</h3>
-              <input
-                type="text"
-                defaultValue=" "
-                disabled
-                name="valueOne"
-                onChange={e => this.applyPattern(e, id)}
-              ></input>
-            </div>
-          );
+
+            //If White Space
+            if(tempPatterns[i].type === "whiteSpace") {
+                inputReturn = <div className="pattern-container">
+                    <h3>White Space</h3>
+                    <input disabled name="valueOne" onChange={(e)=> this.applyPattern(e, id)}></input>
+                </div>
+            }
+            // If number Range
+            if(tempPatterns[i].type === "numberRange") {
+                inputReturn = <div className="pattern-container">
+                    <input type="number" max={9} min={0} className="range-a" name="valueOne" onChange={(e)=> this.applyPattern(e, id)}></input>
+                    <span>-</span>
+                    <input type="number" max={9} min={0} className="range-b" name="valueTwo" onChange={(e)=> this.applyPattern(e, id)}></input>
+                </div>
+            }
+            // If Character Select
+            if(tempPatterns[i].type === "selectCharacters") {
+                inputReturn = <div className="pattern-container">
+                    <h3>Select Characters</h3>
+                    <input type="text" className="range-a" name="valueOne" onChange={(e)=> this.applyPattern(e, id)}></input>
+                    <input type="text" className="range-b" name="valueTwo" onChange={(e)=> this.applyPattern(e, id)}></input>
+                </div>
+            }
+
         }
         // If number Range
         if (tempPatterns[i].type === "numberRange") {
