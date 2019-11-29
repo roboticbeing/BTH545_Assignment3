@@ -4,10 +4,10 @@ import Select from 'react-select';
 import './style.scss';
 
 const options = [
-    { value: 'userDefine', label: 'User Defined' },
+    { value: 'userDefined', label: 'User Defined' },
     { value: 'whiteSpace', label: 'White Space' },
     { value: 'numberRange', label: 'Number Range' },
-    { value: 'selectCharacter', label: 'Select Character' },
+    { value: 'selectCharacters', label: 'Select Character' },
   ];
 
 
@@ -17,27 +17,88 @@ class PartOne extends Component {
         
         this.state = {
             patterns: [],
-            usedColors: 0
+            usedColors: 0,
+            defaultList: ["iPhone 6-7-8-1", "iPhoneX 6-7-8-1", "iPhoneS6", "iPhone 3", "iPhoneXL 10", ],
+            selectedList: []
         }
         this.displayPatterns = this.displayPatterns.bind(this);
         this.addPatterns = this.addPatterns.bind(this);
         this.updatePattern = this.updatePattern.bind(this);
         this.inputDisplay = this.inputDisplay.bind(this);
+        this.applyPattern = this.applyPattern.bind(this);
+        this.displayDefault = this.displayDefault.bind(this);
+        this.displaySelected = this.displaySelected.bind(this);
+        this.displayRegex = this.displayRegex.bind(this);
     }
-  
 
-updatePattern = (e) => {
-    console.log("Update Pattern" + e);
-    console.log(e)
+//Still have to add the remove button 
+
+//Order Button
+
+
+displayRegex = () => {
+    let regex = [];
+
+    regex.push(<div className="pattern-item">
+        <p>Iphone</p>
+    </div>)
+    regex.push(<div className="pattern-item">
+        <span className="box"></span>
+    </div>)
+
+    return regex;
 
 
 }
 
-//Update individual pattern values
-updatePatternValue = (e) => {
+
+//Loops out the default list
+displayDefault = () => {
+    return this.state.defaultList.map( (item, idx) => {
+       return <h3 key={idx}>{item}</h3>
+    });
+}
+
+//Loops out the selected list
+displaySelected = () => {
+    return this.state.selectedList.map( (item, idx) => {
+        return <h3 key={idx}>{item}</h3>
+    });
+}
+
+//Where you can take the input from the screen and apply the pattern
+applyPattern = (e, id) => {
+    //Pattern Id
+    console.log(id)
+
+    //Value Name, can be the first input or second
+    console.log(e.target.name)
+
+    //Value Of input
+    console.log(e.target.value)
+}    
+
+//Updates the type of pattern for each box
+updatePattern = (e, id) => {
+    
+    let tempPatterns = this.state.patterns; 
+
+    for(let i = 0; i < tempPatterns.length; i++) {
+        if(tempPatterns[i].id === id.name ) {
+            tempPatterns[i].type = e.value;
+        }
+    }
+
+    this.setState({
+        patterns: tempPatterns
+    })
 
 }
 
+
+
+//Used to create a new pattern option 
+//NOTE: when removing patterns dont touch this.state.usedColors, it's suppose to be unqiue 
 addPatterns = (e) => {
         
     e.preventDefault();
@@ -65,10 +126,6 @@ addPatterns = (e) => {
             }
         }
 
-        // if(tempPatterns.length > 0) {
-        //     preIdx = tempPatterns[tempPatterns.length - 1].order + 1;
-        // }
-        
         let pattern = {
             id: this.state.usedColors,
             order: order,
@@ -80,6 +137,7 @@ addPatterns = (e) => {
 
         tempPatterns.push(pattern)
 
+        //Dont remove colors used !!!
         this.setState({
             patterns: tempPatterns,
             usedColors: this.state.usedColors + 1
@@ -90,34 +148,30 @@ addPatterns = (e) => {
 displayPatterns = () => {
        
     let patterns = []
-    
-    this.state.patterns.map((obj, idx) => {
-        console.log(idx)
+    let tempPatterns  = this.state.patterns;
+
+    //tempPatterns.sort((a, b) => (a.order < b.order) ? 1 : -1)
 
 
+
+    tempPatterns.map((obj, idx) => {
+     
        patterns.push(
            
-        <div key={idx} className="condition-item">
-            {/* <select name={obj.id} 
-
-                name="type"
-                id="type"
-                placeholder="Select Job"
-            //   value={type}
-                onChange={e => this.updatePattern(e)}
-            >
-               
-            </select> */}
-        
-        <Select
+        <div key={idx} className="condition-item" style={{borderColor: obj.color}}>
            
-            onChange={this.updatePattern}
-            options={options}
-            name={obj.id}
-        />
-        
-          
-
+            <div className="select-pattern">
+                <Select
+                    onChange={this.updatePattern}
+                    options={options}
+                    name={obj.id}
+                    defaultValue={ { value: 'userDefined', label: 'User Defined' }}
+                />
+            </div>
+            <div className="input-pattern">
+                {this.inputDisplay(obj.id)}
+            </div>
+       
         </div>
        )
     }) 
@@ -134,19 +188,43 @@ inputDisplay = (id) => {
 
     for(let i = 0; i < tempPatterns.length; i++) {
         if(tempPatterns[i].id === id ) {
-            
-
-            if(tempPatterns[i]) {
-
+            //If User Defined is selected
+            if(tempPatterns[i].type === "userDefined") {
+                inputReturn = <div className="pattern-container">
+                    <h3>User Defined</h3>
+                    <input type="text" name="valueOne" onChange={(e)=> this.applyPattern(e, id)}></input>
+                </div>
             }
 
-
-
+            //If White Space
+            if(tempPatterns[i].type === "whiteSpace") {
+                inputReturn = <div className="pattern-container">
+                    <h3>White Space</h3>
+                    <input disabled name="valueOne" onChange={(e)=> this.applyPattern(e, id)}></input>
+                </div>
+            }
+            // If number Range
+            if(tempPatterns[i].type === "numberRange") {
+                inputReturn = <div className="pattern-container">
+                    <h3>Number Range</h3>
+                    <input type="number" className="range-a" name="valueOne" onChange={(e)=> this.applyPattern(e, id)}></input>
+                    <span>-</span>
+                    <input type="number" className="range-b" name="valueTwo" onChange={(e)=> this.applyPattern(e, id)}></input>
+                </div>
+            }
+            // If Character Select
+            if(tempPatterns[i].type === "selectCharacters") {
+                inputReturn = <div className="pattern-container">
+                    <h3>Select Characters</h3>
+                    <input type="text" className="range-a" name="valueOne" onChange={(e)=> this.applyPattern(e, id)}></input>
+                    <input type="text" className="range-b" name="valueTwo" onChange={(e)=> this.applyPattern(e, id)}></input>
+                </div>
+            }
         }
     }
 
 
-
+    return inputReturn;
 
 }
 
@@ -189,15 +267,22 @@ inputDisplay = (id) => {
 
                 {this.displayPatterns()}
 
-
              </div>
             
             <div className="pattern-section">
-
+                <div className="pattern-container">
+                   {this.displayRegex()}
+                </div>
             </div>
             <div className="files-section">
-
-                
+                <div className="default-files">
+                    <h1>Default Files------</h1>
+                    {this.displayDefault()}
+                </div>
+                <div className="selected-files">
+                    <h1>Select Files------</h1>
+                    {this.displaySelected()}
+                </div>
             </div>
           
         </div>);
