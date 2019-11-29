@@ -11,48 +11,88 @@ const options = [
 ];
 
 class PartOne extends Component {
-  constructor(props) {
-    super(props);
 
-    this.state = {
-      patterns: [],
-      usedColors: 0,
-      defaultList: [
-        "iPhone 6-7-8-1",
-        "iPhoneX 6-7-8-1",
-        "iPhoneS6",
-        "iPhone 3",
-        "iPhoneXL 10"
-      ],
-      selectedList: []
-    };
-    this.displayPatterns = this.displayPatterns.bind(this);
-    this.addPatterns = this.addPatterns.bind(this);
-    this.updatePattern = this.updatePattern.bind(this);
-    this.inputDisplay = this.inputDisplay.bind(this);
-    this.applyPattern = this.applyPattern.bind(this);
-    this.displayDefault = this.displayDefault.bind(this);
-    this.displaySelected = this.displaySelected.bind(this);
-    this.displayRegex = this.displayRegex.bind(this);
-  }
+    constructor(props) {
+        super(props);
+        
+        this.state = {
+            patterns: [],
+            savedPatterns: [],
+            usedColors: 0,
+            defaultList: ["iPhone 6-7-8-1", "iPhoneX 6-7-8-1", "iPhoneS6", "iPhone 3", "iPhoneXL 10", ],
+            selectedList: []
+        }
+        this.displayPatterns = this.displayPatterns.bind(this);
+        this.addPatterns = this.addPatterns.bind(this);
+        this.updatePattern = this.updatePattern.bind(this);
+        this.inputDisplay = this.inputDisplay.bind(this);
+        this.applyPattern = this.applyPattern.bind(this);
+        this.displayDefault = this.displayDefault.bind(this);
+        this.displaySelected = this.displaySelected.bind(this);
+        this.displayRegex = this.displayRegex.bind(this);
+    }
 
-  //Still have to add the remove button
+//Still have to add the remove button 
 
-  //Order Button
+//Order Button
 
-  displayRegex = () => {
+
+displayRegex = () => {
+
     let regex = [];
 
-    regex.push(
-      <div className="pattern-item">
-        <p id="pattern">Iphone</p>
-      </div>
-    );
-    regex.push(
-      <div className="pattern-item">
+
+
+    console.log("Showing Patterns");
+    for (let i = 0; i < this.state.patterns.length; ++i){
+        console.log("Pattern " + i + ": " + this.state.patterns[i].type);
+        
+        if (this.state.patterns[i].type === "userDefined"){
+            regex.push(
+                <div className="pattern-item">
+                    <p>{this.state.patterns[i].valueOne}</p>
+                </div>
+            );
+        }
+        else if (this.state.patterns[i].type === "whiteSpace"){
+            regex.push(
+                <div className="pattern-item">
+                    <span className="box"></span>
+                </div>
+            );
+        }
+        else if (this.state.patterns[i].type === "numberRange"){
+            regex.push(
+                <div className="pattern-item">
+                    <p>[{this.state.patterns[i].valueOne} - {this.state.patterns[i].valueTwo}]</p>
+                </div>
+            );
+        }
+        else if (this.state.patterns[i].type === "selectCharacters"){
+            regex.push(
+                <div className="pattern-item">
+                    <p>[{this.state.patterns[i].valueOne}]</p>
+                </div>
+            );
+
+            for (let j = 1; j < this.state.patterns[i].valueTwo; ++j){
+                regex.push(
+                    <div className="pattern-item">
+                        <p>[{this.state.patterns[i].valueOne}]</p>
+                    </div>
+                );
+            }
+        }
+    }
+
+    /*regex.push(<div className="pattern-item">
+        <p>Iphone</p>
+    </div>);
+    
+    regex.push(<div className="pattern-item">
         <span className="box"></span>
-      </div>
-    );
+    </div>);*/
+
 
     return regex;
   };
@@ -487,22 +527,75 @@ class PartOne extends Component {
 
         <div className="condition-section">{this.displayPatterns()}</div>
 
-        <div className="pattern-section">
-          <div className="pattern-container">{this.displayRegex()}</div>
-        </div>
-        <div className="files-section">
-          <div className="default-files">
-            <h1>Default Files------</h1>
-            {this.displayDefault()}
-          </div>
-          <div className="selected-files">
-            <h1>Select Files------</h1>
-            {this.displaySelected()}
-          </div>
-        </div>
-      </div>
-    );
-  }
+
+savePattern = () => {
+    this.state.savedPatterns.push(this.state.patterns);
+    console.log(this.state.savedPatterns);
+    
+}
+
+    componentDidMount() {
+       
+    }
+    render() {
+        return(<div>
+
+             <div className="menu-section">
+               
+                
+                <div className="menu-container">
+                    <h2>Make A Pattern</h2>
+                    <button onClick={(e) => this.addPatterns(e)} className="menu-add menu-btn">
+                       <p>Add Condition</p> 
+                    </button>
+                    <button onClick={(e) => this.RemovePattern(e)} className="menu-add menu-btn">
+                       <p>Remove Condition</p> 
+                    </button>
+
+                  
+                </div>
+                
+                <div className="menu-container">
+                   
+                    <button className="menu-add menu-btn">
+                      <p>Dictionary</p>  
+                    </button>
+
+                    <button className="menu-load menu-btn">
+                        <p>Load Pattern Template</p>
+                    </button>
+                
+                    <button onClick={(e) => this.savePattern(e)} className="menu-save menu-btn">
+                        <p>Save Pattern Template</p>
+                    </button>
+                </div>
+
+             </div>
+
+             <div className="condition-section">
+
+                {this.displayPatterns()}
+
+             </div>
+            
+            <div className="pattern-section">
+                <div className="pattern-container">
+                   {this.displayRegex()}
+                </div>
+            </div>
+            <div className="files-section">
+                <div className="default-files">
+                    <h1>Default Files------</h1>
+                    {this.displayDefault()}
+                </div>
+                <div className="selected-files">
+                    <h1>Select Files------</h1>
+                    {this.displaySelected()}
+                </div>
+            </div>
+          
+        </div>);
+    }
 }
 
 export default PartOne;
