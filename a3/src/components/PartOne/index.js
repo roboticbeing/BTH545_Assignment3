@@ -17,6 +17,7 @@ class PartOne extends Component {
         
         this.state = {
             patterns: [],
+            savedPatterns: [],
             usedColors: 0,
             defaultList: ["iPhone 6-7-8-1", "iPhoneX 6-7-8-1", "iPhoneS6", "iPhone 3", "iPhoneXL 10", ],
             selectedList: []
@@ -40,12 +41,56 @@ displayRegex = () => {
     let regex = [];
     
 
-    regex.push(<div className="pattern-item">
-        <p id="pattern">Iphone</p>
-    </div>)
+
+    console.log("Showing Patterns");
+    for (let i = 0; i < this.state.patterns.length; ++i){
+        console.log("Pattern " + i + ": " + this.state.patterns[i].type);
+        
+        if (this.state.patterns[i].type === "userDefined"){
+            regex.push(
+                <div className="pattern-item">
+                    <p>{this.state.patterns[i].valueOne}</p>
+                </div>
+            );
+        }
+        else if (this.state.patterns[i].type === "whiteSpace"){
+            regex.push(
+                <div className="pattern-item">
+                    <span className="box"></span>
+                </div>
+            );
+        }
+        else if (this.state.patterns[i].type === "numberRange"){
+            regex.push(
+                <div className="pattern-item">
+                    <p>[{this.state.patterns[i].valueOne} - {this.state.patterns[i].valueTwo}]</p>
+                </div>
+            );
+        }
+        else if (this.state.patterns[i].type === "selectCharacters"){
+            regex.push(
+                <div className="pattern-item">
+                    <p>[{this.state.patterns[i].valueOne}]</p>
+                </div>
+            );
+
+            for (let j = 1; j < this.state.patterns[i].valueTwo; ++j){
+                regex.push(
+                    <div className="pattern-item">
+                        <p>[{this.state.patterns[i].valueOne}]</p>
+                    </div>
+                );
+            }
+        }
+    }
+
+    /*regex.push(<div className="pattern-item">
+        <p>Iphone</p>
+    </div>);
+    
     regex.push(<div className="pattern-item">
         <span className="box"></span>
-    </div>)
+    </div>);*/
 
     return regex;
 
@@ -290,6 +335,12 @@ inputDisplay = (id) => {
 
 }
 
+savePattern = () => {
+    this.state.savedPatterns.push(this.state.patterns);
+    console.log(this.state.savedPatterns);
+    
+}
+
     componentDidMount() {
        
     }
@@ -321,7 +372,7 @@ inputDisplay = (id) => {
                         <p>Load Pattern Template</p>
                     </button>
                 
-                    <button className="menu-save menu-btn">
+                    <button onClick={(e) => this.savePattern(e)} className="menu-save menu-btn">
                         <p>Save Pattern Template</p>
                     </button>
                 </div>
