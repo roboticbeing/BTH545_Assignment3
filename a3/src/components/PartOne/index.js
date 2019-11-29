@@ -20,7 +20,8 @@ class PartOne extends Component {
             savedPatterns: [],
             usedColors: 0,
             defaultList: ["iPhone 6-7-8-1", "iPhoneX 6-7-8-1", "iPhoneS6", "iPhone 3", "iPhoneXL 10", ],
-            selectedList: []
+            selectedList: [],
+            regex: []
         }
         this.displayPatterns = this.displayPatterns.bind(this);
         this.addPatterns = this.addPatterns.bind(this);
@@ -49,35 +50,35 @@ displayRegex = () => {
         
         if (this.state.patterns[i].type === "userDefined"){
             regex.push(
-                <div className="pattern-item">
+                <div className="pattern-item" style={{color: this.state.patterns[i].color}}>
                     <p>{this.state.patterns[i].valueOne}</p>
                 </div>
             );
         }
         else if (this.state.patterns[i].type === "whiteSpace"){
             regex.push(
-                <div className="pattern-item">
-                    <span className="box"></span>
+                <div className="pattern-item" >
+                    <span className="box" style={{color: this.state.patterns[i].color}}></span>
                 </div>
             );
         }
         else if (this.state.patterns[i].type === "numberRange"){
             regex.push(
-                <div className="pattern-item">
+                <div className="pattern-item" style={{color: this.state.patterns[i].color}}>
                     <p>[{this.state.patterns[i].valueOne} - {this.state.patterns[i].valueTwo}]</p>
                 </div>
             );
         }
         else if (this.state.patterns[i].type === "selectCharacters"){
             regex.push(
-                <div className="pattern-item">
+                <div className="pattern-item" style={{color: this.state.patterns[i].color}}>
                     <p>[{this.state.patterns[i].valueOne}]</p>
                 </div>
             );
 
             for (let j = 1; j < this.state.patterns[i].valueTwo; ++j){
                 regex.push(
-                    <div className="pattern-item">
+                    <div className="pattern-item" style={{color: this.state.patterns[i].color}}>
                         <p>[{this.state.patterns[i].valueOne}]</p>
                     </div>
                 );
@@ -93,9 +94,14 @@ displayRegex = () => {
         <span className="box"></span>
     </div>);*/
 
+    this.setState({
+        regex: regex
+    })
 
-    return regex;
-  };
+   // return regex;
+
+
+}
 
   //Loops out the default list
   displayDefault = () => {
@@ -171,6 +177,9 @@ displayRegex = () => {
       }
     }
 
+    this.displayRegex();
+}    
+
     let regEx = new RegExp(regex);
     console.log("Regular expression is ", { regEx });
 
@@ -204,6 +213,11 @@ displayRegex = () => {
       patterns: tempPatterns
     });
   };
+
+
+    this.displayRegex();
+
+}
 
   //Used to create a new pattern option
   //NOTE: when removing patterns dont touch this.state.usedColors, it's suppose to be unqiue
@@ -353,29 +367,55 @@ displayRegex = () => {
 
     let order = 0;
 
-    for (let i = 0; i < tempPatterns.length; i++) {
-      if (tempPatterns[i].order > order) {
-        order = tempPatterns[i].order + 1;
-      }
+        this.displayRegex();
     }
 
-    let pattern = {
-      id: this.state.usedColors,
-      order: order,
-      type: "userDefined",
-      valueOne: "",
-      valueTwo: "",
-      color: selectColors
-    };
-
-    tempPatterns.pop(pattern);
-
-    //Dont remove colors used !!!
-    this.setState({
-      patterns: tempPatterns,
-      usedColors: this.state.usedColors + 1
-    });
-  };
+    RemovePattern = (e) => {
+        
+        e.preventDefault();
+    
+           var colorArray = ['#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6', 
+           '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',
+           '#80B300', '#809900', '#E6B3B3', '#6680B3', '#66991A', 
+           '#FF99E6', '#CCFF1A', '#FF1A66', '#E6331A', '#33FFCC',
+           '#66994D', '#B366CC', '#4D8000', '#B33300', '#CC80CC', 
+           '#66664D', '#991AFF', '#E666FF', '#4DB3FF', '#1AB399',
+           '#E666B3', '#33991A', '#CC9999', '#B3B31A', '#00E680', 
+           '#4D8066', '#809980', '#E6FF80', '#1AFF33', '#999933',
+           '#FF3380', '#CCCC00', '#66E64D', '#4D80CC', '#9900B3', 
+           '#E64D66', '#4DB380', '#FF4D4D', '#99E6E6', '#6666FF'];
+            
+    
+            let selectColors = colorArray[this.state.usedColors]
+            let tempPatterns = this.state.patterns;
+            
+            let order = 0;
+    
+            for(let i = 0; i < tempPatterns.length; i++) {
+                if(tempPatterns[i].order > order) {
+                    order = tempPatterns[i].order + 1
+                }
+            }
+    
+            let pattern = {
+                id: this.state.usedColors,
+                order: order,
+                type: "userDefined",
+                valueOne: "",
+                valueTwo: "",
+                color: selectColors
+            }
+    
+            tempPatterns.pop(pattern);
+    
+            //Dont remove colors used !!!
+            this.setState({
+                patterns: tempPatterns,
+                usedColors: this.state.usedColors - 1
+            })
+    
+            this.displayRegex();
+        }
 
   displayPatterns = () => {
     let patterns = [];
@@ -448,7 +488,7 @@ displayRegex = () => {
                 inputReturn = <div className="pattern-container">
                     <h3>Select Characters</h3>
                     <input type="text" className="range-a" name="valueOne" onChange={(e)=> this.applyPattern(e, id)}></input>
-                    <input type="text" className="range-b" name="valueTwo" onChange={(e)=> this.applyPattern(e, id)}></input>
+                    <input type="number" className="range-b" name="valueTwo" min="1" onChange={(e)=> this.applyPattern(e, id)}></input>
                 </div>
             }
 
@@ -588,10 +628,10 @@ savePattern = () => {
                 {this.displayPatterns()}
 
              </div>
-            
+            <hr/>
             <div className="pattern-section">
                 <div className="pattern-container">
-                   {this.displayRegex()}
+                   {this.state.regex}
                 </div>
             </div>
             <div className="files-section">
