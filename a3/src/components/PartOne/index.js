@@ -17,6 +17,7 @@ class PartOne extends Component {
         
         this.state = {
             patterns: [],
+            savedPatterns: [],
             usedColors: 0,
             defaultList: ["iPhone 6-7-8-1", "iPhoneX 6-7-8-1", "iPhoneS6", "iPhone 3", "iPhoneXL 10", ],
             selectedList: [],
@@ -120,11 +121,15 @@ displaySelected = () => {
 applyPattern = (e, id) => {
     //Pattern Id
     //Value Name, can be the first input or second
-    console.log(e.target.name)
+    // console.log(e.target.name);
 
     //Value Of input
-    console.log(e.target.value)
+    // console.log(e.target.value);
+
     let tempPatterns = this.state.patterns;
+    let regex = "";
+    let tempSelectedfiles = [];
+    let listOfFiles = this.state.defaultList;
 
     for (let i = 0; i < tempPatterns.length; i++) {
       if (tempPatterns[i].id === id) {
@@ -140,9 +145,51 @@ applyPattern = (e, id) => {
             tempPatterns[i].valueTwo = e.target.value;
           }
         }
-      } 
+      }
+
+      if (tempPatterns[i].type === "userDefined") {
+        regex = regex.concat(tempPatterns[i].valueOne);
+      }
+
+      //If White Space
+      if (tempPatterns[i].type === "whiteSpace") {
+        regex = regex.concat(" ");
+      }
+      // If number Range
+      if (tempPatterns[i].type === "numberRange") {
+        regex = regex.concat(
+          "[",
+          tempPatterns[i].valueOne,
+          "-",
+          tempPatterns[i].valueTwo,
+          "]"
+        );
+      }
+      // If Character Select
+      if (tempPatterns[i].type === "selectCharacters") {
+        for (let j = 0; j < tempPatterns[i].valueTwo; ++j){
+            regex = regex.concat(
+            "[",
+            tempPatterns[i].valueOne,
+            "]"
+            );
+        }
+      }
     }
 
+    let regEx = new RegExp(regex);
+    console.log("Regular expression is ", { regEx });
+
+    listOfFiles.forEach(element => {
+      //   console.log(element);
+      if (element.match(regEx)) {
+        tempSelectedfiles.push(element);
+      }
+    });
+
+    this.setState({
+      selectedList: tempSelectedfiles
+    });
     this.displayRegex();
 }    
 
@@ -325,9 +372,9 @@ inputDisplay = (id) => {
             if(tempPatterns[i].type === "numberRange") {
                 inputReturn = <div className="pattern-container">
                     <h3>Number Range</h3>
-                    <input type="number" className="range-a" name="valueOne" onChange={(e)=> this.applyPattern(e, id)}></input>
+                    <input type="number" className="range-a" name="valueOne" min="0" max="8" onChange={(e)=> this.applyPattern(e, id)}></input>
                     <span>-</span>
-                    <input type="number" className="range-b" name="valueTwo" onChange={(e)=> this.applyPattern(e, id)}></input>
+                    <input type="number" className="range-b" name="valueTwo" min="1" max="9" onChange={(e)=> this.applyPattern(e, id)}></input>
                 </div>
             }
             // If Character Select
@@ -343,6 +390,12 @@ inputDisplay = (id) => {
 
 
     return inputReturn;
+
+}
+
+savePattern = () => {
+    this.state.savedPatterns.push(this.state.patterns);
+    console.log(this.state.savedPatterns);
 
 }
 
@@ -377,7 +430,7 @@ inputDisplay = (id) => {
                         <p>Load Pattern Template</p>
                     </button>
                 
-                    <button className="menu-save menu-btn">
+                    <button onClick={(e) => this.savePattern(e)} className="menu-save menu-btn">
                         <p>Save Pattern Template</p>
                     </button>
                 </div>
