@@ -269,10 +269,9 @@ inputDisplay = (id) => {
             // If number Range
             if(tempPatterns[i].type === "numberRange") {
                 inputReturn = <div className="pattern-container">
-                    <h3>Number Range</h3>
-                    <input type="number" className="range-a" name="valueOne" onChange={(e)=> this.applyPattern(e, id)}></input>
+                    <input type="number" max={9} min={0} className="range-a" name="valueOne" onChange={(e)=> this.applyPattern(e, id)}></input>
                     <span>-</span>
-                    <input type="number" className="range-b" name="valueTwo" onChange={(e)=> this.applyPattern(e, id)}></input>
+                    <input type="number" max={9} min={0} className="range-b" name="valueTwo" onChange={(e)=> this.applyPattern(e, id)}></input>
                 </div>
             }
             // If Character Select
