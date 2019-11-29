@@ -17,6 +17,7 @@ class PartOne extends Component {
         
         this.state = {
             patterns: [],
+            savedPatterns: [],
             usedColors: 0,
             defaultList: ["iPhone 6-7-8-1", "iPhoneX 6-7-8-1", "iPhoneS6", "iPhone 3", "iPhoneXL 10", ],
             selectedList: []
@@ -335,6 +336,12 @@ inputDisplay = (id) => {
 
 }
 
+savePattern = () => {
+    this.state.savedPatterns.push(this.state.patterns);
+    console.log(this.state.savedPatterns);
+    
+}
+
     componentDidMount() {
        
     }
@@ -366,7 +373,7 @@ inputDisplay = (id) => {
                         <p>Load Pattern Template</p>
                     </button>
                 
-                    <button className="menu-save menu-btn">
+                    <button onClick={(e) => this.savePattern(e)} className="menu-save menu-btn">
                         <p>Save Pattern Template</p>
                     </button>
                 </div>
