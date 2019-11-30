@@ -10,6 +10,8 @@ const options = [
     { value: 'selectCharacters', label: 'Select Character' },
   ];
 
+var numOfSaved = 0;
+var savedPatterns = [];
 
 class PartOne extends Component {
     constructor(props) {
@@ -17,9 +19,8 @@ class PartOne extends Component {
         
         this.state = {
             patterns: [],
-            savedPatterns: [],
             usedColors: 0,
-            defaultList: ["iPhone 6-7-8-1", "iPhoneX 6-7-8-1", "iPhoneS6", "iPhone 3", "iPhoneXL 10", ],
+            defaultList: ["iPhone 6-7-8-1", "iPhoneX 6-7-8-1", "iPhoneS6", "iPhone 3", "iPhoneXL 10", "index", "fonts", "123ABC"],
             selectedList: [],
             regex: []
         }
@@ -43,9 +44,9 @@ displayRegex = () => {
     
 
 
-    console.log("Showing Patterns");
+    //console.log("Showing Patterns");
     for (let i = 0; i < this.state.patterns.length; ++i){
-        console.log("Pattern " + i + ": " + this.state.patterns[i].type);
+        //console.log("Pattern " + i + ": " + this.state.patterns[i].type);
         
         if (this.state.patterns[i].type === "userDefined"){
             regex.push(
@@ -62,11 +63,20 @@ displayRegex = () => {
             );
         }
         else if (this.state.patterns[i].type === "numberRange"){
-            regex.push(
-                <div className="pattern-item" style={{color: this.state.patterns[i].color}}>
-                    <p>[{this.state.patterns[i].valueOne} - {this.state.patterns[i].valueTwo}]</p>
-                </div>
-            );
+            if (this.state.patterns[i].valueOne <= this.state.patterns[i].valueTwo){
+                regex.push(
+                    <div className="pattern-item" style={{color: this.state.patterns[i].color}}>
+                        <p>[{this.state.patterns[i].valueOne} - {this.state.patterns[i].valueTwo}]</p>
+                    </div>
+                );
+            }
+            else {
+                regex.push(
+                    <div className="pattern-item" style={{color: this.state.patterns[i].color}}>
+                        <p>[INVALID NUMBER RANGE]</p>
+                    </div>
+                );
+            }
         }
         else if (this.state.patterns[i].type === "selectCharacters"){
             regex.push(
@@ -127,7 +137,7 @@ applyPattern = (e, id) => {
     // console.log(e.target.value);
 
     let tempPatterns = this.state.patterns;
-    let regex = "";
+    let regex = "^";
     let tempSelectedfiles = [];
     let listOfFiles = this.state.defaultList;
 
@@ -153,17 +163,19 @@ applyPattern = (e, id) => {
 
       //If White Space
       if (tempPatterns[i].type === "whiteSpace") {
-        regex = regex.concat(" ");
+        regex = regex.concat("\\s");
       }
       // If number Range
       if (tempPatterns[i].type === "numberRange") {
-        regex = regex.concat(
-          "[",
-          tempPatterns[i].valueOne,
-          "-",
-          tempPatterns[i].valueTwo,
-          "]"
-        );
+        if (tempPatterns[i].valueOne <= tempPatterns[i].valueTwo){
+            regex = regex.concat(
+            "[",
+            tempPatterns[i].valueOne,
+            "-",
+            tempPatterns[i].valueTwo,
+            "]"
+            );
+        }
       }
       // If Character Select
       if (tempPatterns[i].type === "selectCharacters") {
@@ -201,6 +213,17 @@ updatePattern = (e, id) => {
     for(let i = 0; i < tempPatterns.length; i++) {
         if(tempPatterns[i].id === id.name ) {
             tempPatterns[i].type = e.value;
+            if (tempPatterns[i].type === "whiteSpace"){
+                tempPatterns[i].valueOne = "";
+                tempPatterns[i].valueTwo = "";
+            }
+            else if (tempPatterns[i].type === "numberRange"){
+                tempPatterns[i].valueOne = 0;
+                tempPatterns[i].valueTwo = 9;
+            }
+            else if (tempPatterns[i].type === "selectCharacters"){
+                tempPatterns[i].valueTwo = 1;
+            }
         }
     }
 
@@ -208,6 +231,7 @@ updatePattern = (e, id) => {
         patterns: tempPatterns
     })
 
+    this.applyPattern(e, id);
     this.displayRegex();
 
 }
@@ -307,6 +331,7 @@ addPatterns = (e) => {
                 usedColors: this.state.usedColors - 1
             })
     
+            //this.applyPattern(e, id);
             this.displayRegex();
         }
 
@@ -321,7 +346,7 @@ displayPatterns = () => {
 
     tempPatterns.map((obj, idx) => {
      
-       patterns.push(
+       return (patterns.push(
            
         <div key={idx} className="condition-item" style={{borderColor: obj.color}}>
            
@@ -338,7 +363,7 @@ displayPatterns = () => {
             </div>
        
         </div>
-       )
+       ))
     }) 
 
 
@@ -365,16 +390,17 @@ inputDisplay = (id) => {
             if(tempPatterns[i].type === "whiteSpace") {
                 inputReturn = <div className="pattern-container">
                     <h3>White Space</h3>
-                    <input disabled name="valueOne" onChange={(e)=> this.applyPattern(e, id)}></input>
+                    <input disabled name="valueOne" value="" onChange={(e)=> this.applyPattern(e, id)}></input>
                 </div>
             }
             // If number Range
             if(tempPatterns[i].type === "numberRange") {
                 inputReturn = <div className="pattern-container">
                     <h3>Number Range</h3>
-                    <input type="number" className="range-a" name="valueOne" min="0" max="8" onChange={(e)=> this.applyPattern(e, id)}></input>
+                    <input type="number" className="range-a" defaultValue="0" name="valueOne" min="0" max="9" onChange={(e)=> this.applyPattern(e, id)}></input>
                     <span>-</span>
-                    <input type="number" className="range-b" name="valueTwo" min="1" max="9" onChange={(e)=> this.applyPattern(e, id)}></input>
+                    <input type="number" className="range-b" defaultValue="9" name="valueTwo" min="0" max="9" onChange={(e)=> this.applyPattern(e, id)}></input>
+                    <h3>Min &nbsp; &nbsp; &nbsp; &nbsp; Max</h3>
                 </div>
             }
             // If Character Select
@@ -382,7 +408,8 @@ inputDisplay = (id) => {
                 inputReturn = <div className="pattern-container">
                     <h3>Select Characters</h3>
                     <input type="text" className="range-a" name="valueOne" onChange={(e)=> this.applyPattern(e, id)}></input>
-                    <input type="number" className="range-b" name="valueTwo" min="1" onChange={(e)=> this.applyPattern(e, id)}></input>
+                    <h3>Number of times repeated</h3>
+                    <input type="number" className="range-b" name="valueTwo" defaultValue="1" min="1" onChange={(e)=> this.applyPattern(e, id)}></input>
                 </div>
             }
         }
@@ -394,8 +421,24 @@ inputDisplay = (id) => {
 }
 
 savePattern = () => {
-    this.state.savedPatterns.push(this.state.patterns);
-    console.log(this.state.savedPatterns);
+    //var temp = this.state.patterns
+    //let temp = $.extend(true, [], this.state.patterns);;
+    //var temp = Object.assign({}, this.state.patterns);
+    //let temp;
+    //this.state.savedPatterns.push(temp);
+    // console.log("Before saving")
+    // console.log(temp);
+    // console.log(savedPatterns);
+    //savedPatterns[numOfSaved] = temp;
+    let tempArr = [...this.state.patterns];
+    savedPatterns[numOfSaved] = [...tempArr];
+    //var tempArr = savedPatterns.concat(temp);
+    //savedPatterns = savedPatterns.concat(temp);
+    //console.log(tempArr);
+    //savedPatterns = tempArr;
+    numOfSaved++;
+    console.log("After saving")
+    console.log(savedPatterns);
 
 }
 
