@@ -620,10 +620,13 @@ class PartOne extends Component {
         <div className="files-section">
           <div className="default-files">
             <h1>Default Files------</h1>
+            <br />
             {this.displayDefault()}
           </div>
+          <br />
           <div className="selected-files">
             <h1>Select Files------</h1>
+            <br />
             {this.displaySelected()}
           </div>
         </div>
