@@ -384,17 +384,20 @@ savePattern = () => {
                 {this.displayPatterns()}
 
              </div>
-            
+            <br></br>
             <div className="pattern-section">
                 <div className="pattern-container">
                    {this.displayRegex()}
                 </div>
             </div>
+            <br></br>
             <div className="files-section">
                 <div className="default-files">
                     <h1>Default Files------</h1>
+                    <br></br>
                     {this.displayDefault()}
                 </div>
+                <br></br>
                 <div className="selected-files">
                     <h1>Select Files------</h1>
                     {this.displaySelected()}

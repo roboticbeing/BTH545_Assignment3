@@ -17,7 +17,7 @@ function App() {
         <div>
         <div className="nav">
         
-          <Link className="nav-item" to="/"  > 
+          <Link className="nav-item nav-one" to="/"  > 
                 <h1>Step One</h1>
                 <p>Create A Pattern By Creating Conditions And Select Files</p>
           </Link>

@@ -1,8 +1,47 @@
 @import "./../../assets/stylesheets/main"; 
 
+$colour-primary: 	rgb(72, 182, 207);
+$colour-secondary: lighten($colour-primary, 
+25%);
+$colour-light: lighten($colour-primary, 
+75%);
+$colour-highlight1: 
+lighten(complement($colour-primary), 50%);
+$colour-highlight2: 
+lighten(complement($colour-secondary), 50%);
+
+
+body {
+    text-align: center;
+    background: linear-gradient(155deg,
+    $colour-primary 70%, 
+    $colour-secondary 70%);
+    color: $colour-light;
+    min-height: 100vh;
+  }
+  h1 {
+      color: $colour-highlight1;
+  }
+  
+  p {
+    color: $colour-highlight2;
+  }
+
+button {
+    background-color:darken($color: $colour-primary, $amount: 10);
+    &:hover { background-color: darken($color: $colour-primary, $amount: 20)}
+    
+}
+
+.nav-item {
+    &:hover { background-color: darken($color: $colour-primary, $amount: 25)}
+}
+
+.nav-one {
+    background-color: darken($color: $colour-primary, $amount: 20)
+}
 
 .menu-section {
-
     padding: 20px $Dmw;
     display: flex;
     justify-content: space-between;
@@ -29,11 +68,19 @@
 }
 .condition-section {
     display: flex;
+    color: rgb(38, 61, 61);
+
+
+// $red: random(255);
+// $green: random(255);
+// $blue: random(255);
+// $colour-primary: rgb($red, $green, $blue);
 
     .condition-item {
         height: 200px;
         width: 400px;
         border: 3px solid;
+        background: paleturquoise;
         .select-pattern {
             font-family: $mainTextL;
         }
@@ -50,6 +97,8 @@
         .pattern-item {
             display: inline-block;
             font-size: 24px;
+            font-weight: bold;
+            font-style: italic;
             margin: 0 5px; 
 
             .box {
