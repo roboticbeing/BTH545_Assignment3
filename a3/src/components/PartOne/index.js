@@ -611,7 +611,7 @@ class PartOne extends Component {
         </div>
 
         <div className="condition-section">{this.displayPatterns()}</div>
-        <hr />
+       <hr />
         <br />
         <div className="pattern-section">
           <div className="pattern-container">{this.state.regex}</div>

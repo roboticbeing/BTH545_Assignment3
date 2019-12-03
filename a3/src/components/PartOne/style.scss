@@ -13,7 +13,7 @@ lighten(complement($colour-secondary), 50%);
 
 body {
     text-align: center;
-    background: linear-gradient(155deg,
+    background: linear-gradient(158deg,
     $colour-primary 70%, 
     $colour-secondary 70%);
     color: $colour-light;
