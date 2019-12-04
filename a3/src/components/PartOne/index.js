@@ -41,6 +41,7 @@ class PartOne extends Component {
     this.displayDefault = this.displayDefault.bind(this);
     this.displaySelected = this.displaySelected.bind(this);
     this.displayRegex = this.displayRegex.bind(this);
+    this.loadPatterns=this.loadPatterns.bind(this);
   }
 
   //Still have to add the remove button
@@ -135,12 +136,39 @@ class PartOne extends Component {
     // return regex;
   };
 
+  loadPatterns = () => {
+    
+    var d = document.getElementById('savedPatterns');
+    var child = d.lastElementChild;
+    while (child){
+      d.removeChild(child);
+      child = d.lastElementChild;
+    }
+
+  
+
+    let p;
+    let s;
+   
+    for (var i=0; i < this.state.patterns.length; i++){
+      s  = JSON.stringify(this.state.patterns[i].valueOne);
+      p = document.createElement('p');
+      p.innerHTML = s;
+      d.appendChild(p);
+    }
+    
+  }
+
   //Loops out the default list
   displayDefault = () => {
     return this.state.defaultList.map((item, idx) => {
       return <h3 key={idx}>{item}</h3>;
     });
   };
+
+
+   
+
 
   //Loops out the selected list
   displaySelected = () => {
@@ -458,6 +486,8 @@ class PartOne extends Component {
     return patterns;
   };
 
+  displaySavedPatt
+
   inputDisplay = id => {
     let tempPatterns = this.state.patterns;
 
@@ -597,7 +627,7 @@ class PartOne extends Component {
               <p>Dictionary</p>
             </button>
 
-            <button className="menu-load menu-btn">
+            <button className="menu-load menu-btn" onClick={e => this.loadPatterns(e)}>
               <p>Load Pattern Template</p>
             </button>
 
@@ -617,7 +647,13 @@ class PartOne extends Component {
           <div className="pattern-container">{this.state.regex}</div>
         </div>
         <br />
+        
         <div className="files-section">
+        <h1>Saved Patterns------</h1>
+        <div id="savedPatterns">
+          
+        </div>
+          <br></br>
           <div className="default-files">
             <h1>Default Files------</h1>
             <br />
