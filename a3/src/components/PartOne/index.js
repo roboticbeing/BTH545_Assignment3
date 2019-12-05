@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Select from "react-select";
+import  { ReactComponent as Add } from "./../../assets/icons/add.svg";
 
 import "./style.scss";
 
@@ -498,7 +499,7 @@ class PartOne extends Component {
                 //If User Defined is selected
                 if (tempPatterns[i].type === "userDefined") {
                     inputReturn = (
-                        <div className="pattern-container">
+                        <div className="pattern-content">
                             <h3>User Defined</h3>
                             <input
                                 type="text"
@@ -512,7 +513,7 @@ class PartOne extends Component {
                 //If White Space
                 if (tempPatterns[i].type === "whiteSpace") {
                     inputReturn = (
-                        <div className="pattern-container">
+                        <div className="pattern-content">
                             <h3>White Space</h3>
                             <input
                                 disabled
@@ -526,7 +527,7 @@ class PartOne extends Component {
                 // If number Range
                 if (tempPatterns[i].type === "numberRange") {
                     inputReturn = (
-                        <div className="pattern-container">
+                        <div className="pattern-content">
                             <h3>Number Range</h3>
                             <input
                                 type="number"
@@ -554,7 +555,7 @@ class PartOne extends Component {
                 // If Character Select
                 if (tempPatterns[i].type === "selectCharacters") {
                     inputReturn = (
-                        <div className="pattern-container">
+                        <div className="pattern-content">
                             <h3>Select Characters</h3>
                             <input
                                 type="text"
@@ -613,6 +614,8 @@ class PartOne extends Component {
                             className="menu-add menu-btn"
                         >
                             <p>Add Condition</p>
+                            <div className="add-icon"><Add /></div>
+                            
                         </button>
                         <button
                             onClick={e => this.RemovePattern(e)}
