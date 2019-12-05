@@ -73,6 +73,7 @@ hr{
 .condition-section {
     display: flex;
     color: rgb(38, 61, 61);
+    overflow-x: auto;
 
     .condition-item {
         height: 200px;
@@ -84,6 +85,19 @@ hr{
         }
     }
 }
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+::-webkit-scrollbar-track {
+    background: rgb(72, 182, 207);
+}
+::-webkit-scrollbar-thumb {
+    background: rgb(38, 61, 61);
+    
+}
+
 .pattern-section {
     display: flex;
     justify-content: center;
@@ -108,4 +122,14 @@ hr{
 
         }
     }
+}
+
+#left {
+    float: left;
+    width: 50%;
+    overflow: hidden;
+}
+
+#right {
+    overflow: hidden;
 }
