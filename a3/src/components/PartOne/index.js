@@ -34,7 +34,8 @@ class PartOne extends Component {
                 "123ABC"
             ],
             selectedList: [],
-            regex: []
+            regex: [],
+            toggleSaveScene: false,
         };
         this.displayPatterns = this.displayPatterns.bind(this);
         this.addPatterns = this.addPatterns.bind(this);
@@ -45,6 +46,7 @@ class PartOne extends Component {
         this.displaySelected = this.displaySelected.bind(this);
         this.displayRegex = this.displayRegex.bind(this);
         this.loadPatterns = this.loadPatterns.bind(this);
+        this.togglePopUp = this.togglePopUp.bind(this);
     }
 
     //Still have to add the remove button
@@ -619,6 +621,10 @@ class PartOne extends Component {
         console.log(savedPatterns);
     };
 
+    togglePopUp = () => {
+        this.setState({toggleSaveScene: !this.state.toggleSaveScene});
+    }
+
     componentDidMount() { }
     render() {
         return (
@@ -647,12 +653,16 @@ class PartOne extends Component {
                             <p>Dictionary</p>
                         </button>
 
-                        <button className="menu-load menu-btn" onClick={e => this.loadPatterns(e)}>
+                        <button className="menu-load menu-btn" 
+                        onClick={() => this.togglePopUp()}
+                        //onClick={e => this.loadPatterns(e)}
+                        >
                             <p>Load Pattern Template</p>
                         </button>
 
                         <button
-                            onClick={e => this.savePattern(e)}
+                            //onClick={e => this.savePattern(e)}
+                            onClick={() => this.togglePopUp()}
                             className="menu-save menu-btn"
                         >
                             <p>Save Pattern Template</p>
@@ -667,7 +677,7 @@ class PartOne extends Component {
                     <div className="pattern-container">{this.state.regex}</div>
                 </div>
                 <br />
-
+                
                 <h1>Saved Patterns------</h1>
                     <div id="savedPatterns">
                 </div>
@@ -685,6 +695,48 @@ class PartOne extends Component {
                         {this.displaySelected()}
                     </div>
                 </div>
+
+
+                {/* Save pop up  */}
+                <div className={`pop-container ${this.state.toggleSaveScene ? "active-pop" :" "}`}>
+                    <div className="save-popup">
+                       
+                        <div className="load-container">
+                            <div className="saved-items">
+                                {/* Each one should have an Onclick with a unique id attached to it*/}
+                                {/* you can map out all you need */}
+                                {/* <h4 onClick={}>Save001</h4> */}
+                                <h4> Save001 </h4>
+                                <h4> Save001 </h4>
+                                <h4> Save001 </h4>
+                                <h4> Save001 </h4>
+                            </div>
+                        </div>
+
+                        <div className="save-container">
+                            <input
+                                type="text"
+                                className="save-input"
+                                name="save"
+                                //This will keep track of the temp save name
+                                // onChange={e => this.applyPattern(e, id)}
+                            ></input>
+                            <button
+                                //This on click method will use the temp save name to save the pattern under the name,
+                                //but the saved object will still need a unique id   
+                                // onClick={() => this.()}
+                                className=" menu-btn"
+                            >
+                                <p>Save Pattern</p>
+                            </button> 
+                        </div>
+                        
+                        <button className="close-pop" onClick={e => this.togglePopUp()}>
+                            <p>Close</p> 
+                        </button>
+                    </div>
+                </div>
+
             </div>
         );
     }
