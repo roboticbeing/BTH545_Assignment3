@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import Select from "react-select";
 import  { ReactComponent as Add } from "./../../assets/icons/add.svg";
+import  { ReactComponent as Remove } from "./../../assets/icons/remove.svg";
+import  { ReactComponent as Info } from "./../../assets/icons/info.svg";
 
 import "./style.scss";
 
@@ -286,9 +288,7 @@ class PartOne extends Component {
 
         var colorArray = [
             "#FF6633",
-            "#FFB399",
             "#FF33FF",
-            "#FFFF99",
             "#00B3E6",
             "#E6B333",
             "#3366E6",
@@ -343,7 +343,7 @@ class PartOne extends Component {
         let order = 0;
 
         for (let i = 0; i < tempPatterns.length; i++) {
-            if (tempPatterns[i].order > order) {
+            if (tempPatterns[i].order >= order) {
                 order = tempPatterns[i].order + 1;
             }
         }
@@ -373,9 +373,7 @@ class PartOne extends Component {
 
         var colorArray = [
             "#FF6633",
-            "#FFB399",
             "#FF33FF",
-            "#FFFF99",
             "#00B3E6",
             "#E6B333",
             "#3366E6",
@@ -471,15 +469,26 @@ class PartOne extends Component {
                     className="condition-item"
                     style={{ borderColor: obj.color }}
                 >
+                    <div className="pattern-info">
+                        <div className="order">{obj.order}</div>
+                        <div className="item-remove-btn">
+                            <Remove />
+                        </div>
+                    </div>
                     <div className="select-pattern">
+                        <div className="select-content">
                         <Select
                             onChange={this.updatePattern}
                             options={options}
                             name={obj.id}
                             defaultValue={{ value: "userDefined", label: "User Defined" }}
                         />
+                        </div>
+                        <div className="info-icon"><Info/></div>
                     </div>
-                    <div className="input-pattern">{this.inputDisplay(obj.id)}</div>
+                    <div className="input-pattern">{this.inputDisplay(obj.id)}
+                        <div className="color-circle" style={{backgroundColor: obj.color }}></div>
+                    </div>
                 </div>
             );
         });
@@ -500,7 +509,6 @@ class PartOne extends Component {
                 if (tempPatterns[i].type === "userDefined") {
                     inputReturn = (
                         <div className="pattern-content">
-                            <h3>User Defined</h3>
                             <input
                                 type="text"
                                 name="valueOne"
@@ -514,7 +522,7 @@ class PartOne extends Component {
                 if (tempPatterns[i].type === "whiteSpace") {
                     inputReturn = (
                         <div className="pattern-content">
-                            <h3>White Space</h3>
+                            
                             <input
                                 disabled
                                 name="valueOne"
@@ -528,7 +536,7 @@ class PartOne extends Component {
                 if (tempPatterns[i].type === "numberRange") {
                     inputReturn = (
                         <div className="pattern-content">
-                            <h3>Number Range</h3>
+                            
                             <input
                                 type="number"
                                 className="range-a"
@@ -540,6 +548,7 @@ class PartOne extends Component {
                             ></input>
                             <span>-</span>
                             <input
+                            
                                 type="number"
                                 className="range-b"
                                 defaultValue="9"
@@ -548,7 +557,9 @@ class PartOne extends Component {
                                 max="9"
                                 onChange={e => this.applyPattern(e, id)}
                             ></input>
-                            <h3>Min &nbsp; &nbsp; &nbsp; &nbsp; Max</h3>
+                            <div className="desc">
+                                <h3>Min &nbsp; &nbsp; &nbsp; &nbsp; Max</h3>
+                            </div>
                         </div>
                     );
                 }
@@ -556,15 +567,17 @@ class PartOne extends Component {
                 if (tempPatterns[i].type === "selectCharacters") {
                     inputReturn = (
                         <div className="pattern-content">
-                            <h3>Select Characters</h3>
+                          
                             <input
                                 type="text"
                                 className="range-a"
                                 name="valueOne"
                                 onChange={e => this.applyPattern(e, id)}
                             ></input>
-                            <h3>Number of times repeated</h3>
+                            
+                           
                             <input
+                                className="second"
                                 type="number"
                                 className="range-b"
                                 name="valueTwo"
@@ -572,6 +585,10 @@ class PartOne extends Component {
                                 min="1"
                                 onChange={e => this.applyPattern(e, id)}
                             ></input>
+                            <div className="desc">
+                                <h3>Number of times repeated</h3>
+                            </div>
+
                         </div>
                     );
                 }
