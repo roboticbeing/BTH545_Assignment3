@@ -372,28 +372,159 @@ class PartOne extends Component {
     };
 
     RemoveSpecificPattern = (e, index) => {
-        e.preventDefault();
-        let tempPatterns = this.state.patterns;
+        // e.preventDefault();
+        // let tempPatterns = [];
         
-        //let index = id; //REPLACE WITH ID OF SELECTED PATTERN
-        let count = 0;
+        // console.log("The index is " + (index));
 
-        tempPatterns.splice(index, 1);
+     
 
+        // //console.log(index - 1);
+
+        // //let index = id; //REPLACE WITH ID OF SELECTED PATTERN
+        // let count = 0;
+
+        // //console.log(tempPatterns[index]);
+
+        // //tempPatterns.splice(index, 1);
+
+        // //console.log("After: " + tempPatterns[index]);
+
+        
+
+        // this.setState({
+        //     patterns: tempPatterns,
+        //     usedColors: this.state.usedColors
+        //     //usedColors: this.state.usedColors - 1
+        // });
+
+        // let id = this.state.usedColors;
+
+        // this.applyPattern(e, id);
+        //  this.displayRegex();
+        // //console.log(index);
+
+        e.preventDefault();
+
+        var colorArray = [
+            "#FF6633",
+            "#FF33FF",
+            "#00B3E6",
+            "#E6B333",
+            "#3366E6",
+            "#999966",
+            "#99FF99",
+            "#B34D4D",
+            "#80B300",
+            "#809900",
+            "#E6B3B3",
+            "#6680B3",
+            "#66991A",
+            "#FF99E6",
+            "#CCFF1A",
+            "#FF1A66",
+            "#E6331A",
+            "#33FFCC",
+            "#66994D",
+            "#B366CC",
+            "#4D8000",
+            "#B33300",
+            "#CC80CC",
+            "#66664D",
+            "#991AFF",
+            "#E666FF",
+            "#4DB3FF",
+            "#1AB399",
+            "#E666B3",
+            "#33991A",
+            "#CC9999",
+            "#B3B31A",
+            "#00E680",
+            "#4D8066",
+            "#809980",
+            "#E6FF80",
+            "#1AFF33",
+            "#999933",
+            "#FF3380",
+            "#CCCC00",
+            "#66E64D",
+            "#4D80CC",
+            "#9900B3",
+            "#E64D66",
+            "#4DB380",
+            "#FF4D4D",
+            "#99E6E6",
+            "#6666FF"
+        ];
+
+        //let selectColors = colorArray[this.state.usedColors];
+        let tempPatterns = [];
+        //let superTemp = []
+
+
+
+        for (let i = 0; i < this.state.patterns.length; ++i){
+                if (this.state.patterns[i].id !== index){
+                    console.log(i);
+                    tempPatterns.push(this.state.patterns[i]);
+                }
+        }
+        
+        console.log(this.state.patterns)
+        console.log(tempPatterns)
+
+
+        var count = 0;
         tempPatterns.forEach(element => {
             element.order = count;
             count++;
         });
 
+        // for (let i = 0; i < tempPatterns.length; i++) {
+        //     if (tempPatterns[i].order > order) {
+        //         order = tempPatterns[i].order + 1;
+        //     }
+        // }
+
+        /*let pattern = {
+            id: this.state.usedColors,
+            order: order,
+            type: "userDefined",
+            valueOne: "",
+            valueTwo: "",
+            color: selectColors
+        };*/
+
+        /*var correct = 0;
+        //tempPatterns.pop(pattern);
+        for (let i = 0; i < this.state.patterns.length; ++i){
+            if (this.state.patterns[i].id == index){
+                console.log(i);
+                //tempPatterns.push(this.state.patterns[i]);
+                correct = i;
+            }
+        }*/
+
+      
+
+        //Dont remove colors used !!!
         this.setState({
             patterns: tempPatterns,
-            usedColors: this.state.usedColors - 1
+            usedColors: this.state.usedColors
+        }, () => { 
+            console.log(this.state.patterns);
+            this.forceUpdate();
+
+            let id = this.state.usedColors;
+            this.applyPattern(e, id);
+            this.displayRegex();
         });
+      
+       
+       
+        
 
-        let id = this.state.usedColors;
-
-        this.applyPattern(e, id);
-        this.displayRegex();
+        
     }
 
     RemovePattern = e => {
@@ -475,7 +606,7 @@ class PartOne extends Component {
         //Dont remove colors used !!!
         this.setState({
             patterns: tempPatterns,
-            usedColors: this.state.usedColors - 1
+            usedColors: this.state.usedColors
         });
 
         let id = this.state.usedColors;
@@ -499,7 +630,7 @@ class PartOne extends Component {
                 >
                     <div className="pattern-info">
                         <div className="order">{obj.order}</div>
-                        <div className="item-remove-btn">
+                        <div className="item-remove-btn" onClick={e => this.RemoveSpecificPattern(e, obj.id)}>
                             <Remove />
                         </div>
                     </div>
@@ -509,6 +640,7 @@ class PartOne extends Component {
                             onChange={this.updatePattern}
                             options={options}
                             name={obj.id}
+                            value={this.getType(obj.id)}
                             defaultValue={{ value: "userDefined", label: "User Defined" }}
                         />
                         </div>
@@ -524,6 +656,26 @@ class PartOne extends Component {
         return patterns;
     };
 
+
+    getType = id => {
+        for (let i = 0; i < this.state.patterns.length; i++) {
+            if (this.state.patterns[i].id === id) {
+                //If User Defined is selected
+                if (this.state.patterns[i].type === "userDefined") {
+                    return { value: "userDefined", label: "User Defined"};
+                }
+                else if (this.state.patterns[i].type === "whiteSpace"){
+                    return { value: "whiteSpace", label: "White Space"};
+                }
+                else if (this.state.patterns[i].type === "numberRange"){
+                    return { value: "numberRange", label: "Number Range"};
+                }
+                else if (this.state.patterns[i].type === "selectCharacters"){
+                    return { value: "selectCharacters", label: "Select Characters"};
+                }
+            }
+        }
+    };
     //displaySavedPatt
 
     inputDisplay = id => {
@@ -540,6 +692,7 @@ class PartOne extends Component {
                             <input
                                 type="text"
                                 name="valueOne"
+                                value={tempPatterns[i].valueOne}
                                 onChange={e => this.applyPattern(e, id)}
                             ></input>
                         </div>
@@ -569,6 +722,7 @@ class PartOne extends Component {
                                 type="number"
                                 className="range-a"
                                 defaultValue="0"
+                                value={tempPatterns[i].valueOne}
                                 name="valueOne"
                                 min="0"
                                 max="9"
@@ -580,6 +734,7 @@ class PartOne extends Component {
                                 type="number"
                                 className="range-b"
                                 defaultValue="9"
+                                value={tempPatterns[i].valueTwo}
                                 name="valueTwo"
                                 min="0"
                                 max="9"
@@ -600,6 +755,7 @@ class PartOne extends Component {
                                 type="text"
                                 className="range-a"
                                 name="valueOne"
+                                value={tempPatterns[i].valueOne}
                                 onChange={e => this.applyPattern(e, id)}
                             ></input>
                             
@@ -610,6 +766,7 @@ class PartOne extends Component {
                                 className="range-b"
                                 name="valueTwo"
                                 defaultValue="1"
+                                value={tempPatterns[i].valueTwo}
                                 min="1"
                                 onChange={e => this.applyPattern(e, id)}
                             ></input>
