@@ -43,6 +43,7 @@ class PartOne extends Component {
         this.displaySelected = this.displaySelected.bind(this);
         this.displayRegex = this.displayRegex.bind(this);
         this.loadPatterns = this.loadPatterns.bind(this);
+        this.RemoveSpecificPattern = this.RemoveSpecificPattern.bind(this);  
     }
 
     //Still have to add the remove button
@@ -188,7 +189,7 @@ class PartOne extends Component {
         // console.log(e.target.value);
 
         let tempPatterns = this.state.patterns;
-        let regex = "";
+        let regex = "^";
         let tempSelectedfiles = [];
         let listOfFiles = this.state.defaultList;
 
@@ -251,6 +252,8 @@ class PartOne extends Component {
         });
         this.displayRegex();
     };
+
+
 
     //Updates the type of pattern for each box
     updatePattern = (e, id) => {
@@ -367,6 +370,31 @@ class PartOne extends Component {
 
         this.displayRegex();
     };
+
+    RemoveSpecificPattern = (e, index) => {
+        e.preventDefault();
+        let tempPatterns = this.state.patterns;
+        
+        //let index = id; //REPLACE WITH ID OF SELECTED PATTERN
+        let count = 0;
+
+        tempPatterns.splice(index, 1);
+
+        tempPatterns.forEach(element => {
+            element.order = count;
+            count++;
+        });
+
+        this.setState({
+            patterns: tempPatterns,
+            usedColors: this.state.usedColors - 1
+        });
+
+        let id = this.state.usedColors;
+
+        this.applyPattern(e, id);
+        this.displayRegex();
+    }
 
     RemovePattern = e => {
         e.preventDefault();
@@ -487,7 +515,7 @@ class PartOne extends Component {
         return patterns;
     };
 
-    displaySavedPatt
+    //displaySavedPatt
 
     inputDisplay = id => {
         let tempPatterns = this.state.patterns;
