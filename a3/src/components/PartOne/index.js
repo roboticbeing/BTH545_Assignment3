@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import Select from "react-select";
-import  { ReactComponent as Add } from "./../../assets/icons/add.svg";
-import  { ReactComponent as Remove } from "./../../assets/icons/remove.svg";
-import  { ReactComponent as Info } from "./../../assets/icons/info.svg";
+import { ReactComponent as Add } from "./../../assets/icons/add.svg";
+import { ReactComponent as Remove } from "./../../assets/icons/remove.svg";
+import { ReactComponent as Info } from "./../../assets/icons/info.svg";
 
 import "./style.scss";
 
@@ -46,7 +46,6 @@ class PartOne extends Component {
         this.displaySelected = this.displaySelected.bind(this);
         this.displayRegex = this.displayRegex.bind(this);
         this.loadPatterns = this.loadPatterns.bind(this);
-
         this.togglePopUp = this.togglePopUp.bind(this);
         this.RemoveSpecificPattern = this.RemoveSpecificPattern.bind(this);  
     }
@@ -376,109 +375,50 @@ class PartOne extends Component {
 
     RemoveSpecificPattern = (e, index) => {
         e.preventDefault();
-        let tempPatterns = this.state.patterns;
-        
-        //let index = id; //REPLACE WITH ID OF SELECTED PATTERN
-        let count = 0;
 
-        tempPatterns.splice(index, 1);
+        let tempPatterns = [];
 
+        for (let i = 0; i < this.state.patterns.length; ++i) {
+            if (this.state.patterns[i].id !== index) {
+                console.log(i);
+                tempPatterns.push(this.state.patterns[i]);
+            }
+        }
+
+        //console.log(this.state.patterns)
+        //console.log(tempPatterns)
+
+
+        var count = 0;
         tempPatterns.forEach(element => {
             element.order = count;
             count++;
         });
 
+        //Dont remove colors used !!!
         this.setState({
             patterns: tempPatterns,
-            usedColors: this.state.usedColors - 1
+            usedColors: this.state.usedColors
+        }, () => {
+            console.log(this.state.patterns);
+            this.forceUpdate();
+
+            let id = this.state.usedColors;
+            this.applyPattern(e, id);
+            this.displayRegex();
         });
 
-        let id = this.state.usedColors;
-
-        this.applyPattern(e, id);
-        this.displayRegex();
     }
 
     RemovePattern = e => {
         e.preventDefault();
-
-        var colorArray = [
-            "#FF6633",
-            "#FF33FF",
-            "#00B3E6",
-            "#E6B333",
-            "#3366E6",
-            "#999966",
-            "#99FF99",
-            "#B34D4D",
-            "#80B300",
-            "#809900",
-            "#E6B3B3",
-            "#6680B3",
-            "#66991A",
-            "#FF99E6",
-            "#CCFF1A",
-            "#FF1A66",
-            "#E6331A",
-            "#33FFCC",
-            "#66994D",
-            "#B366CC",
-            "#4D8000",
-            "#B33300",
-            "#CC80CC",
-            "#66664D",
-            "#991AFF",
-            "#E666FF",
-            "#4DB3FF",
-            "#1AB399",
-            "#E666B3",
-            "#33991A",
-            "#CC9999",
-            "#B3B31A",
-            "#00E680",
-            "#4D8066",
-            "#809980",
-            "#E6FF80",
-            "#1AFF33",
-            "#999933",
-            "#FF3380",
-            "#CCCC00",
-            "#66E64D",
-            "#4D80CC",
-            "#9900B3",
-            "#E64D66",
-            "#4DB380",
-            "#FF4D4D",
-            "#99E6E6",
-            "#6666FF"
-        ];
-
-        let selectColors = colorArray[this.state.usedColors];
         let tempPatterns = this.state.patterns;
-
-        let order = 0;
-
-        for (let i = 0; i < tempPatterns.length; i++) {
-            if (tempPatterns[i].order > order) {
-                order = tempPatterns[i].order + 1;
-            }
-        }
-
-        let pattern = {
-            id: this.state.usedColors,
-            order: order,
-            type: "userDefined",
-            valueOne: "",
-            valueTwo: "",
-            color: selectColors
-        };
-
-        tempPatterns.pop(pattern);
+        tempPatterns.pop();
 
         //Dont remove colors used !!!
         this.setState({
             patterns: tempPatterns,
-            usedColors: this.state.usedColors - 1
+            usedColors: this.state.usedColors
         });
 
         let id = this.state.usedColors;
@@ -502,23 +442,24 @@ class PartOne extends Component {
                 >
                     <div className="pattern-info">
                         <div className="order">{obj.order}</div>
-                        <div className="item-remove-btn">
+                        <div className="item-remove-btn" onClick={e => this.RemoveSpecificPattern(e, obj.id)}>
                             <Remove />
                         </div>
                     </div>
                     <div className="select-pattern">
                         <div className="select-content">
-                        <Select
-                            onChange={this.updatePattern}
-                            options={options}
-                            name={obj.id}
-                            defaultValue={{ value: "userDefined", label: "User Defined" }}
-                        />
+                            <Select
+                                onChange={this.updatePattern}
+                                options={options}
+                                name={obj.id}
+                                value={this.getType(obj.id)}
+                                defaultValue={{ value: "userDefined", label: "User Defined" }}
+                            />
                         </div>
-                        <div className="info-icon"><Info/></div>
+                        <div className="info-icon"><Info /></div>
                     </div>
                     <div className="input-pattern">{this.inputDisplay(obj.id)}
-                        <div className="color-circle" style={{backgroundColor: obj.color }}></div>
+                        <div className="color-circle" style={{ backgroundColor: obj.color }}></div>
                     </div>
                 </div>
             );
@@ -527,6 +468,26 @@ class PartOne extends Component {
         return patterns;
     };
 
+
+    getType = id => {
+        for (let i = 0; i < this.state.patterns.length; i++) {
+            if (this.state.patterns[i].id === id) {
+                //If User Defined is selected
+                if (this.state.patterns[i].type === "userDefined") {
+                    return { value: "userDefined", label: "User Defined" };
+                }
+                else if (this.state.patterns[i].type === "whiteSpace") {
+                    return { value: "whiteSpace", label: "White Space" };
+                }
+                else if (this.state.patterns[i].type === "numberRange") {
+                    return { value: "numberRange", label: "Number Range" };
+                }
+                else if (this.state.patterns[i].type === "selectCharacters") {
+                    return { value: "selectCharacters", label: "Select Characters" };
+                }
+            }
+        }
+    };
     //displaySavedPatt
 
     inputDisplay = id => {
@@ -543,6 +504,7 @@ class PartOne extends Component {
                             <input
                                 type="text"
                                 name="valueOne"
+                                value={tempPatterns[i].valueOne}
                                 onChange={e => this.applyPattern(e, id)}
                             ></input>
                         </div>
@@ -553,7 +515,7 @@ class PartOne extends Component {
                 if (tempPatterns[i].type === "whiteSpace") {
                     inputReturn = (
                         <div className="pattern-content">
-                            
+
                             <input
                                 disabled
                                 name="valueOne"
@@ -567,11 +529,12 @@ class PartOne extends Component {
                 if (tempPatterns[i].type === "numberRange") {
                     inputReturn = (
                         <div className="pattern-content">
-                            
+
                             <input
                                 type="number"
                                 className="range-a"
                                 defaultValue="0"
+                                value={tempPatterns[i].valueOne}
                                 name="valueOne"
                                 min="0"
                                 max="9"
@@ -579,10 +542,11 @@ class PartOne extends Component {
                             ></input>
                             <span>-</span>
                             <input
-                            
+
                                 type="number"
                                 className="range-b"
                                 defaultValue="9"
+                                value={tempPatterns[i].valueTwo}
                                 name="valueTwo"
                                 min="0"
                                 max="9"
@@ -598,21 +562,23 @@ class PartOne extends Component {
                 if (tempPatterns[i].type === "selectCharacters") {
                     inputReturn = (
                         <div className="pattern-content">
-                          
+
                             <input
                                 type="text"
                                 className="range-a"
                                 name="valueOne"
+                                value={tempPatterns[i].valueOne}
                                 onChange={e => this.applyPattern(e, id)}
                             ></input>
-                            
-                           
+
+
                             <input
                                 className="second"
                                 type="number"
                                 className="range-b"
                                 name="valueTwo"
                                 defaultValue="1"
+                                value={tempPatterns[i].valueTwo}
                                 min="1"
                                 onChange={e => this.applyPattern(e, id)}
                             ></input>
@@ -667,7 +633,7 @@ class PartOne extends Component {
                         >
                             <p>Add Condition</p>
                             <div className="add-icon"><Add /></div>
-                            
+
                         </button>
                         <button
                             onClick={e => this.RemovePattern(e)}
@@ -708,7 +674,7 @@ class PartOne extends Component {
                 <br />
                 
                 <h1>Saved Patterns------</h1>
-                    <div id="savedPatterns">
+                <div id="savedPatterns">
                 </div>
                 <div className="files-section">
                     <br></br>
