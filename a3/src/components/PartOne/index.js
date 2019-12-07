@@ -15,6 +15,8 @@ const options = [
 
 var numOfSaved = 0;
 var savedPatterns = [];
+var saveNames = [];
+var tempSaveName = "";
 
 class PartOne extends Component {
     constructor(props) {
@@ -392,7 +394,7 @@ class PartOne extends Component {
 
         for (let i = 0; i < this.state.patterns.length; ++i) {
             if (this.state.patterns[i].id !== index) {
-                console.log(i);
+                //console.log(i);
                 tempPatterns.push(this.state.patterns[i]);
             }
         }
@@ -412,7 +414,7 @@ class PartOne extends Component {
             patterns: tempPatterns,
             usedColors: this.state.usedColors
         }, () => {
-            console.log(this.state.patterns);
+            //console.log(this.state.patterns);
             this.forceUpdate();
 
             let id = this.state.usedColors;
@@ -585,7 +587,6 @@ class PartOne extends Component {
 
 
                             <input
-                                className="second"
                                 type="number"
                                 className="range-b"
                                 name="valueTwo"
@@ -607,34 +608,65 @@ class PartOne extends Component {
         return inputReturn;
     };
 
-    savePattern = e => {
-        //var temp = this.state.patterns
-        //let temp = $.extend(true, [], this.state.patterns);;
-        //var temp = Object.assign({}, this.state.patterns);
-        //let temp;
-        //this.state.savedPatterns.push(temp);
-        // console.log("Before saving")
-        // console.log(temp);
-        // console.log(savedPatterns);
-        //savedPatterns[numOfSaved] = temp;
-        let tempArr = [...this.state.patterns];
-        savedPatterns[numOfSaved] = [...tempArr];
-        //var tempArr = savedPatterns.concat(temp);
-        //savedPatterns = savedPatterns.concat(temp);
-        //console.log(tempArr);
-        //savedPatterns = tempArr;
-        numOfSaved++;
-        console.log("After saving");
-        console.log(savedPatterns);
+    savePattern = () => {
+        var tempPatterns = [];
 
-     
-       
-       this.state.patternString.push(this.state.text);
-       console.log(this.state.text);
+        for (let i = 0; i < this.state.patterns.length; ++i) {
+            console.log(i);
+            tempPatterns.push(this.state.patterns[i]);
+        }
+
+        savedPatterns[numOfSaved] = tempPatterns;
+        saveNames[numOfSaved] = tempSaveName;
+        numOfSaved++;
+
+        console.log(savedPatterns);
+        console.log(saveNames);
+
+        this.togglePopUp();
     };
+
+    loadPattern = (e, id) => {
+        let tempPattern = []
+
+        for (let i = 0; i < savedPatterns[i].length; ++i) {
+            //console.log(i);
+            tempPattern.push(savedPatterns[id][i]);
+        }
+
+        this.setState({
+            patterns: tempPattern
+        }, () => {
+            console.log(this.state.patterns);
+            //this.forceUpdate();
+            let id = this.state.usedColors;
+            this.applyPattern(e, id);
+            this.displayRegex();
+        });
+    }
 
     togglePopUp = () => {
         this.setState({toggleSaveScene: !this.state.toggleSaveScene});
+    }
+
+    displaySaves = () => {
+        let patterns = [];
+        let tempPatterns = saveNames;
+
+        //tempPatterns.sort((a, b) => (a.order < b.order) ? 1 : -1)
+
+        tempPatterns.map((obj, idx) => {
+            return patterns.push(
+                <h4 onClick={e => this.loadPattern(e, idx)}>{obj}</h4> //Onclick load function
+            );
+        });
+
+        return patterns;
+    };
+
+    handleSaveNameChange (evt) {
+        tempSaveName = evt.target.value;
+        console.log(tempSaveName);
     }
 
     componentDidMount() { }
@@ -673,7 +705,7 @@ class PartOne extends Component {
                         </button>
 
                         <button
-                            //onClick={e => this.savePattern(e)}
+                            //onClick={e => this.savePattern()}
                             onClick={() => this.togglePopUp()}
                             className="menu-save menu-btn"
                         >
@@ -718,10 +750,7 @@ class PartOne extends Component {
                                 {/* Each one should have an Onclick with a unique id attached to it*/}
                                 {/* you can map out all you need */}
                                 {/* <h4 onClick={}>Save001</h4> */}
-                                <h4> Save001 </h4>
-                                <h4> Save001 </h4>
-                                <h4> Save001 </h4>
-                                <h4> Save001 </h4>
+                                {this.displaySaves()}
                             </div>
                         </div>
 
@@ -733,12 +762,12 @@ class PartOne extends Component {
                                 className="save-input"
                                 name="save"
                                 //This will keep track of the temp save name
-                                // onChange={e => this.applyPattern(e, id)}
+                                onChange={this.handleSaveNameChange}
                             ></input>
                             <button
                                 //This on click method will use the temp save name to save the pattern under the name,
                                 //but the saved object will still need a unique id   
-                                 onClick={e => this.savePattern(e)}
+                                onClick={() => this.savePattern()}
                                 className=" menu-btn"
                             >
                                 <p>Save Pattern</p>
