@@ -23,8 +23,9 @@ class PartOne extends Component {
         super(props);
 
         this.state = {
+            text: "",
             patterns: [],
-            patternList: [],
+            patternString: [],
             usedColors: 0,
             defaultList: [
                 "iPhone 6-7-8-1",
@@ -51,6 +52,7 @@ class PartOne extends Component {
         this.loadPatterns = this.loadPatterns.bind(this);
         this.togglePopUp = this.togglePopUp.bind(this);
         this.RemoveSpecificPattern = this.RemoveSpecificPattern.bind(this);  
+        
     }
 
     //Still have to add the remove button
@@ -144,10 +146,19 @@ class PartOne extends Component {
 
         // return regex;
     };
+   
+   
+    handleChange(e) {
+        this.setState({ text: e.target.value });
+      } 
+
+   
 
     loadPatterns = () => {
 
         var d = document.getElementById('savedPatterns');
+        var h1= document.createElement('h1');
+        h1.innerHTML= "Saved Patterns"
         var child = d.lastElementChild;
         while (child) {
             d.removeChild(child);
@@ -159,9 +170,9 @@ class PartOne extends Component {
         let p;
         let s;
 
-        for (var i = 0; i < this.state.patterns.length; i++) {
-            s = JSON.stringify(this.state.patterns[i].valueOne);
-            p = document.createElement('p');
+        for (var i = 0; i < this.state.patternString.length; i++) {
+            s = this.state.patternString[i];
+            p = document.createElement('h2');
             p.innerHTML = s;
             d.appendChild(p);
         }
@@ -687,7 +698,7 @@ class PartOne extends Component {
                         </button>
 
                         <button className="menu-load menu-btn" 
-                        onClick={() => this.togglePopUp()}
+                        onClick={() => this.loadPatterns()}
                         //onClick={e => this.loadPatterns(e)}
                         >
                             <p>Load Pattern Template</p>
@@ -746,6 +757,8 @@ class PartOne extends Component {
                         <div className="save-container">
                             <input
                                 type="text"
+                                onChange={ this.handleChange.bind(this)}
+                                value={this.state.text}
                                 className="save-input"
                                 name="save"
                                 //This will keep track of the temp save name
